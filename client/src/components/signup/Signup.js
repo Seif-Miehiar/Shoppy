@@ -6,6 +6,7 @@ import equals from "validator/lib/equals";
 import { showErrorMsg } from "../../helpers/message"
 import { showSuccessMsg } from "../../helpers/message"
 import { showLoading } from "../../helpers/loading"
+import { signup } from "../../api/auth"
 import "./signup.css";
 
 const Signup = () => {
@@ -67,6 +68,25 @@ const Signup = () => {
 
         setFormData({
           ...formData, loading: true
+        });
+
+        signup(data)
+        .then(response => {
+          console.log("Axios signup success", response);
+          setFormData({
+            username: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            loading: false,
+            successMsg: response.data.successMessage
+          })
+        })
+        .catch((err) => {
+          console.log("Axios signup error ", err);
+          setFormData({
+            ...formData, loading: false
+          })
         })
 
       }
