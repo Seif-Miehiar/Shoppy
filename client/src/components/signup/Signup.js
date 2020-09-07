@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import isEmail from "validator/lib/isEmail";
 import isEmpty from "validator/lib/isEmpty";
 import equals from "validator/lib/equals";
+import { showErrorMsg } from "../../helpers/message"
+import { showSuccessMsg } from "../../helpers/message"
+import { showLoading } from "../../helpers/loading"
 import "./signup.css";
 
 const Signup = () => {
@@ -14,7 +17,7 @@ const Signup = () => {
     confirmPassword: "",
     successMsg: false,
     errorMsg: false,
-    loading: false
+    loading: true
   });
 
   const {
@@ -32,7 +35,9 @@ const Signup = () => {
       // console.log(event.target.value)
       setFormData({
         ...formData,
-        [event.target.name]: event.target.value
+        [event.target.name]: event.target.value,
+        successMsg: '',
+        errorMsg: ''
       })
     }
 
@@ -46,6 +51,20 @@ const Signup = () => {
       if ( isEmpty(username) ||  isEmpty(email) || isEmpty(password) || isEmpty(confirmPassword) ) {
         setFormData({
           ...formData, errorMsg: "All fields are required"
+        });
+      } else if ( !isEmail(email) ) {
+        setFormData({
+          ...formData, errorMsg: "Invalid email"
+        });
+      } else if ( !equals(password, confirmPassword) ) {
+        setFormData({
+          ...formData, errorMsg: "Passwords do not match!"
+        })
+      } 
+      // if success
+      else {
+        setFormData({
+          ...formData, successMsg : "Validation success"
         })
       }
     }
@@ -140,11 +159,10 @@ const Signup = () => {
     <div className="signup-container">
       <div className="row px-3 vh-100">
         <div className="col-md-5 mx-auto align-self-center">
-      {showSignupForm()}
-      <p style={{color:'red'}} >
-
-      {JSON.stringify(formData)}
-      </p>
+          {successMsg && showSuccessMsg(successMsg)}
+          {errorMsg && showErrorMsg(errorMsg)}
+          {loading && <div className="text-center pb-4"> {showLoading()} </div>}
+          {showSignupForm()}
         </div>
       </div>
     </div>
