@@ -1,10 +1,39 @@
-import React from "react";
+import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import "./signup.css";
 
 const Signup = () => {
 
-  //views
+  const[formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    successMsg: false,
+    errorMsg: false,
+    loading: false
+  });
+
+  const {
+    username, 
+    email, 
+    password, 
+    confirmPassword, 
+    successMsg, 
+    errorMsg,
+    loading} = formData;
+
+    // event handlers 
+
+    const handleChange = (event) => {
+      // console.log(event.target.value)
+      setFormData({
+        ...formData,
+        [event.target.name]: event.target.value
+      })
+    }
+
+    //views
   const showSignupForm = () => (
     <form className="signup-form">
       {/* username */}
@@ -15,10 +44,12 @@ const Signup = () => {
           </span>
         </div>
         <input 
-        name=""
+        name="username"
+        value={username}
         className="form-control"
         placeholder="Username"
         type="text" 
+        onChange={handleChange}
         />
       </div>
 
@@ -30,10 +61,12 @@ const Signup = () => {
           </span>
         </div>
         <input 
-        name=""
+        name="email"
+        value={email}
         className="form-control"
         placeholder="Email address"
         type="email"
+        onChange={handleChange}
         />
       </div>
 
@@ -45,9 +78,12 @@ const Signup = () => {
           </span>
         </div>
         <input
+        name="password"
+        value={password}
         className="form-control"
         placeholder="Create password"
         type="password"
+        onChange={handleChange}
         />
       </div>
 
@@ -59,9 +95,12 @@ const Signup = () => {
           </span>
         </div>
         <input
+        name="confirmPassword"
+        value={confirmPassword}
         className="form-control"
         placeholder="Confirm password"
         type="password"
+        onChange={handleChange}
         />
       </div>
 
@@ -85,6 +124,10 @@ const Signup = () => {
       <div className="row px-3 vh-100">
         <div className="col-md-5 mx-auto align-self-center">
       {showSignupForm()}
+      <p style={{color:'red'}} >
+
+      {JSON.stringify(formData)}
+      </p>
         </div>
       </div>
     </div>
