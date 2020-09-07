@@ -1,5 +1,8 @@
 import React, {useState} from "react";
 import { Link } from "react-router-dom";
+import isEmail from "validator/lib/isEmail";
+import isEmpty from "validator/lib/isEmpty";
+import equals from "validator/lib/equals";
 import "./signup.css";
 
 const Signup = () => {
@@ -35,10 +38,16 @@ const Signup = () => {
 
     // handle submit button
     const handleSubmit = (event) => {
-
       // stopping the browser to reload on submit
       event.preventDefault();
       // console.log(formData);
+
+      // client-side validation
+      if ( isEmpty(username) ||  isEmpty(email) || isEmpty(password) || isEmpty(confirmPassword) ) {
+        setFormData({
+          ...formData, errorMsg: "All fields are required"
+        })
+      }
     }
 
     //views
