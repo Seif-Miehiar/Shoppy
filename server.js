@@ -3,13 +3,15 @@ const app = express();
 const cors = require("cors");
 const morgan = require("morgan")
 const connectDB = require('./database/db')
+const authRoutes = require("./routes/auth")
 
-// middleware
+// middlewares
 app.use(cors());
 //to parse incoming data to express server
-app.use(express.json())
+app.use(express.json());
 //for devlopment use only
-app.use(morgan("dev"))
+app.use(morgan("dev"));
+app.use("/api/auth", authRoutes);
 
 
 // creating connection with database
