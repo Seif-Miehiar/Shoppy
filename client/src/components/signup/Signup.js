@@ -14,8 +14,8 @@ const Signup = () => {
   const[formData, setFormData] = useState({
     username: "seif",
     email: "test@tapcom.com",
-    password: "12345",
-    confirmPassword: "12345",
+    password: "12345678",
+    confirmPassword: "12345678",
     successMsg: false,
     errorMsg: false,
     loading: false
@@ -85,7 +85,7 @@ const Signup = () => {
         .catch((err) => {
           console.log("Axios signup error ", err);
           setFormData({
-            ...formData, loading: false
+            ...formData, loading: false, errorMsg: err.response.data.errorMessage
           })
         })
 
