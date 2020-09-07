@@ -1,28 +1,36 @@
-import React, {useState} from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { showErrorMsg } from "../../helpers/message";
 import { showLoading } from "../../helpers/loading";
 import isEmail from "validator/lib/isEmail";
 import isEmpty from "validator/lib/isEmpty";
 import { signin } from "../../api/auth"
 import "./signin.css"
+import { setAuthentication, isAuthenticated } from "../../helpers/auth"
 
 const Signin = () => {
+  const history = useHistory();
+
+  useEffect(() => {
+    if (isAuthenticated() && isAuthenticated().role === 1) {
+      history.push("/admin/dashboard")
+    } else if (isAuthenticated() && isAuthenticated().role === 0) {
+      history.push("/user/dashboard")
+    }
+  }, [history]);
 
   const[formData, setFormData] = useState({
     email: "test@tapcom.com",
     password: "12345678",
     errorMsg: false,
-    loading: false,
-    redirectToDashboard: false
+    loading: false
   });
 
   const {
     email, 
     password,  
     errorMsg,
-    loading,
-    redirectToDashboard } = formData;
+    loading } = formData;
 
     const handleChange = (event) => {
       setFormData({
@@ -55,13 +63,21 @@ const Signin = () => {
             });
     
             signin(data)
-            
-    
+            .then( (response) => {
+              setAuthentication(response.data.token, response.data.user);
+              if (isAuthenticated() && isAuthenticated().role === 1) {
+                console.log("redirecting to admin dashboard");
+                history.push("/admin/dashboard")
+              } else {
+                console.log("redirecting to user dashboard");
+                history.push("/user/dashboard")
+              }
+            })
+            .catch(err => {
+              console.log("signin api function error: ", err)
+            })
           }
-   
         }
-    
-
 
     const showSigninForm = () => (
       <form className="signup-form" onSubmit={handleSubmit}>
