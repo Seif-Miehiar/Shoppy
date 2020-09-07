@@ -1,0 +1,27 @@
+const { check, validationResult } = require('express-validator');
+
+exports.signupValidator = [
+  check("username")
+    .not().isEmpty()
+    .trim()
+    .withMessage("All fields are required"),
+  check("email")
+    .isEmail()
+    .normalizeEmail()
+    .withMessage("Invalid email"),
+  check("password")
+    .isLength({ min: 8 })
+    .withMessage("password must be atleast 6 characters long")
+];
+
+exports.validatorResult = (req, res, next) => {
+  const result = validationResult(req);
+  const hasErrors = !result.isEmpty();
+
+  if (hasErrors) {
+    console.log("has errors: ",hasErrors);
+    console.log("result", result);    
+  }
+
+  next();
+}
