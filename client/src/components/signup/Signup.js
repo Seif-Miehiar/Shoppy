@@ -11,13 +11,13 @@ import "./signup.css";
 const Signup = () => {
 
   const[formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    username: "seif",
+    email: "test@tapcom.com",
+    password: "12345",
+    confirmPassword: "12345",
     successMsg: false,
     errorMsg: false,
-    loading: true
+    loading: false
   });
 
   const {
@@ -61,11 +61,14 @@ const Signup = () => {
           ...formData, errorMsg: "Passwords do not match!"
         })
       } 
-      // if success
       else {
+        const { username, email, password} = formData;
+        const data = { username, email, password};
+
         setFormData({
-          ...formData, successMsg : "Validation success"
+          ...formData, loading: true
         })
+
       }
     }
 
