@@ -33,9 +33,17 @@ const Signup = () => {
       })
     }
 
+    // handle submit button
+    const handleSubmit = (event) => {
+
+      // stopping the browser to reload on submit
+      event.preventDefault();
+      // console.log(formData);
+    }
+
     //views
   const showSignupForm = () => (
-    <form className="signup-form">
+    <form className="signup-form" onSubmit={handleSubmit}>
       {/* username */}
       <div className="form-group input-group">
         <div className="input-group-prepend">
