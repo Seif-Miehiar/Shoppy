@@ -4,5 +4,5 @@ const LIVE = false;
 if (LIVE) {
   module.exports = require("./prod")
 } else {
-  module.exports = require("./dev")
+  module.exports = require("./dev.config")
 }

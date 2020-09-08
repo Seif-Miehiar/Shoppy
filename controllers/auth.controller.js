@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { jwtSecret, jwtExpire } = require("../config/keys");
+const { jwtSecret, jwtExpire } = require("../config/keys.config");
 
 // sign up controller.
 exports.signupController = async (req, res) => {
