@@ -2,14 +2,16 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const morgan = require("morgan")
+const cookieParser = require("cookie-parser")
 const connectDB = require('./database/db')
-const authRoutes = require("./routes/auth")
-const catagoryRoutes = require('./routes/catagory')
+const authRoutes = require("./routes/auth.route")
+const catagoryRoutes = require('./routes/catagory.route')
 
 // middlewares
 app.use(cors());
 //to parse incoming data to express server
 app.use(express.json());
+app.use(cookieParser())
 //for devlopment use only
 app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);

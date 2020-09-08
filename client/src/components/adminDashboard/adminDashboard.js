@@ -1,23 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { createCatagory } from "../../api/catagory"
+import isEmpty from 'validator/lib/isEmpty';
+import { showErrorMsg, showSuccessMsg } from "../../helpers/message";
+import { showLoading } from "../../helpers/loading"
 // import isEmail from "validator/lib/isEmail";
 
 const AdminDashboard = () => {
 
-  const [catagory, setCatagory] = useState(''); 
+  const [catagory, setCatagory] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+  const [loading, setLoading] = useState(''); 
 
   // event handlers
+
+  const handleMessages = (event) => {
+    setErrorMsg('');
+    setSuccessMsg('')
+
+  }
+
   const handleCatagoryChange = (event) => {
     setCatagory(event.target.value);
-    console.log(catagory);
+    setErrorMsg('');
+    setSuccessMsg('');
   }
 
   const handleCatagorySubmit = (event) => {
     event.preventDefault();
 
-    const data = { catagory };
-    createCatagory(data);
-    console.log(catagory)
+    if (isEmpty(catagory)) {
+      setErrorMsg('Please enter a catagory')
+    } else {
+      const data = { catagory };
+      
+      setLoading(true);
+      createCatagory(data)
+        .then((response) => {
+          setLoading(false);
+          setSuccessMsg(response.data.successMessage);
+          setCatagory('')
+        })
+        .catch((err) => {
+          setLoading(false);
+          setErrorMsg(err.response.data.errorMessage);
+        })
+    }
   }
 
   // views.
@@ -64,7 +92,7 @@ const AdminDashboard = () => {
 
 
   const showCatagoryModel = () => (
-    <div id="addCatagoryModal" className="modal">
+    <div id="addCatagoryModal" className="modal" onClick={handleMessages}>
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
         <form onSubmit={handleCatagorySubmit}>
@@ -75,9 +103,20 @@ const AdminDashboard = () => {
               </button>
           </div>
           <div className="modal-body my-2">
-              <label className="text-secondary"> Catagory
+            {errorMsg && showErrorMsg(errorMsg)}
+            {successMsg && showSuccessMsg(successMsg)}
+            
+            {
+              loading ? (
+                <div className="text-center"> {showLoading(loading)} </div>
+              ) : (
+                <Fragment>
+                <label className="text-secondary"> Catagory </label>
                 <input className="form-control" type="text" onChange={handleCatagoryChange} name="catagory" value={catagory} />
-              </label>
+                </Fragment>
+              )
+            }
+              
           </div>
           <div className="modal-footer">
             <button data-dismiss="modal" className="btn btn-secondary"> close </button>
