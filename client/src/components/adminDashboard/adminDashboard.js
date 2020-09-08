@@ -9,6 +9,7 @@ const AdminDashboard = () => {
 
   const [catagories, setCatagories] = useState(null);
   const [catagory, setCatagory] = useState('');
+  const [product, setProduct] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(''); 
@@ -37,7 +38,7 @@ const AdminDashboard = () => {
     await getCatagories()
       .then((response) => {
         setCatagories(response.data.catagories);
-        console.log(catagories)
+        // console.log(catagories)
       })
       .catch((err) => {
         console.log("error in reading catagories:",err);
@@ -84,7 +85,6 @@ const AdminDashboard = () => {
   };
 
   const handleProductImage = (event) => {
-    console.log(event.target.files[0])
     setProductData({
       ...productData,
       [event.target.name]: event.target.files[0]
@@ -101,6 +101,7 @@ const AdminDashboard = () => {
   const handleProductSubmit = (event) => {
     event.preventDefault();
 
+    // console.log(productImage)
     if (productImage === null) {
       setErrorMsg("please Select an image");
     } else if (isEmpty(productName) || isEmpty(productDescription) || isEmpty(productPrice)) {
@@ -110,20 +111,36 @@ const AdminDashboard = () => {
     } else {
       let formData = new FormData();
 
-      formData.append("productImage", productImage);
-      formData.append("productName", productName);
-      formData.append("productDescription", productDescription);
-      formData.append("productCatagory", productCatagory);
-      formData.append("productPrice", productPrice);
+      formData.append("product", { product })
+      // formData.append("productImage", productImage);
+      // formData.append("productName", productName);
+      // formData.append("productDescription", productDescription);
+      // formData.append("productCatagory", productCatagory);
+      // formData.append("productPrice", productPrice);
 
+      setLoading(true);
+      console.log(formData)
       createProduct(formData)
         .then((response) => {
-          console.log("server response: ", response)
+          setLoading(false);
+          setSuccessMsg(response.formData.successMessage);
+          setProduct('')
         })
         .catch((err) => {
-          console.log(err)
+          console.log(err.response.data)
+          setLoading(false);
+          setErrorMsg(err.response.data.errorMessage);
         })
     }
+
+    //   createProduct(formData)
+    //     .then((response) => {
+    //       console.log("server response: ", response)
+    //     })
+    //     .catch((err) => {
+    //       console.log(err)
+    //     })
+    // }
   }
 
   // views.
@@ -257,7 +274,7 @@ const AdminDashboard = () => {
                   </div>
                   <div className="form-group">
                     <label className="text-secondary"> Price</label>
-                    <input type="text" className="form-control" name="productprice" onChange={handleProductChange} />
+                    <input type="text" className="form-control" name="productPrice" onChange={handleProductChange} />
                   </div>
                 </Fragment>
               )

@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser")
 const connectDB = require('./database/db')
 const authRoutes = require("./routes/auth.route")
 const catagoryRoutes = require('./routes/catagory.route')
+const productRoutes = require("./routes/product.route")
 
 // middlewares
 app.use(cors());
@@ -16,7 +17,7 @@ app.use(cookieParser())
 app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);
 app.use('/api/catagory', catagoryRoutes)
-
+app.use('/api/product', productRoutes);
 
 // creating connection with database
 connectDB();

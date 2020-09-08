@@ -1,9 +1,15 @@
 import axios from "axios"
 
 
-export const createProduct = async (data) => {
+export const createProduct = async (formData) => {
 
-  const response = await axios.post('/api/product', data);
+  const config = {
+    header: {
+      "content-type": "application/json"
+    }
+  }
+
+  const response = await axios.post('/api/product', formData, config);
 
   return response
 
