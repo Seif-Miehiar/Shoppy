@@ -4,7 +4,7 @@ import { showErrorMsg } from "../../helpers/message";
 import { showLoading } from "../../helpers/loading";
 import isEmail from "validator/lib/isEmail";
 import isEmpty from "validator/lib/isEmpty";
-import { signin } from "../../api/auth"
+import { signin } from "../../api/auth.api"
 import "./signin.css"
 import { setAuthentication, isAuthenticated } from "../../helpers/auth"
 

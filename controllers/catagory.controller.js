@@ -4,6 +4,15 @@ exports.create = async ( req, res ) => {
     const { catagory } = req.body;
 
     try {
+
+      const catagoryExist = await Catagory.findOne({ catagory });
+
+      if (catagoryExist){
+        return res.status(400).json({
+          errorMessage: `${catagory} was already exists!`
+        })
+      }
+
       let newCatagory = new Catagory();
       newCatagory.catagory = catagory;
 
@@ -19,4 +28,20 @@ exports.create = async ( req, res ) => {
         errorMessage: "Please try again later"
       })
     }
+}
+
+exports.readAll = async ( req, res ) => {
+
+  try {
+    const catagories = await Catagory.find({});
+
+    res.status(200).json({
+      catagories: catagories
+    })
+  } catch (err) {
+    console.log("Read all catagory error: ",err);
+    res.status(500).json({
+      errorMessage: "Please try again later"
+    })
+  }
 }

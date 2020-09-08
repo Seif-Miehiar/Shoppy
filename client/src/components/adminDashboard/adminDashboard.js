@@ -1,16 +1,51 @@
-import React, { useState, Fragment } from "react";
-import { createCatagory } from "../../api/catagory"
+import React, { useState, Fragment, useEffect } from "react";
+import { createCatagory, getCatagories } from "../../api/catagory.api"
+import { createProduct } from "../../api/product.api"
 import isEmpty from 'validator/lib/isEmpty';
 import { showErrorMsg, showSuccessMsg } from "../../helpers/message";
 import { showLoading } from "../../helpers/loading"
-// import isEmail from "validator/lib/isEmail";
 
 const AdminDashboard = () => {
 
+  const [catagories, setCatagories] = useState(null);
   const [catagory, setCatagory] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(''); 
+  const [productData, setProductData] = useState({
+    productImage: null,
+    productName: "",
+    productDescription: "",
+    productPrice: "",
+    productCatagory: ""
+  })
+
+  const {
+    productImage,
+    productName,
+    productDescription,
+    productPrice,
+    productCatagory
+  } = productData
+
+  // using effects.
+  useEffect(() => {
+    loadCatagories()
+  }, [loading])
+
+  const loadCatagories = async () => {
+    await getCatagories()
+      .then((response) => {
+        setCatagories(response.data.catagories);
+        console.log(catagories)
+      })
+      .catch((err) => {
+        console.log("error in reading catagories:",err);
+        
+      })
+  }
+
+
 
   // event handlers
 
@@ -18,13 +53,13 @@ const AdminDashboard = () => {
     setErrorMsg('');
     setSuccessMsg('')
 
-  }
+  };
 
   const handleCatagoryChange = (event) => {
     setCatagory(event.target.value);
     setErrorMsg('');
     setSuccessMsg('');
-  }
+  };
 
   const handleCatagorySubmit = (event) => {
     event.preventDefault();
@@ -44,6 +79,49 @@ const AdminDashboard = () => {
         .catch((err) => {
           setLoading(false);
           setErrorMsg(err.response.data.errorMessage);
+        })
+    }
+  };
+
+  const handleProductImage = (event) => {
+    console.log(event.target.files[0])
+    setProductData({
+      ...productData,
+      [event.target.name]: event.target.files[0]
+    });
+  };
+
+  const handleProductChange = (event) => {
+    setProductData({
+      ...productData,
+      [event.target.name]: event.target.value
+    });
+  };
+
+  const handleProductSubmit = (event) => {
+    event.preventDefault();
+
+    if (productImage === null) {
+      setErrorMsg("please Select an image");
+    } else if (isEmpty(productName) || isEmpty(productDescription) || isEmpty(productPrice)) {
+      setErrorMsg("All fields are required");
+    } else if ( isEmpty(productCatagory) ) {
+      setErrorMsg("Please select a catagory");
+    } else {
+      let formData = new FormData();
+
+      formData.append("productImage", productImage);
+      formData.append("productName", productName);
+      formData.append("productDescription", productDescription);
+      formData.append("productCatagory", productCatagory);
+      formData.append("productPrice", productPrice);
+
+      createProduct(formData)
+        .then((response) => {
+          console.log("server response: ", response)
+        })
+        .catch((err) => {
+          console.log(err)
         })
     }
   }
@@ -74,7 +152,7 @@ const AdminDashboard = () => {
           </div>
 
           <div className="col-md-4 my-1">
-            <button className="btn btn-outline-warning btn-block">
+            <button className="btn btn-outline-warning btn-block" data-toggle="modal" data-target="#addProductModal">
               <i className="fas fa-plus"> Add product</i>
             </button>
           </div>
@@ -128,12 +206,81 @@ const AdminDashboard = () => {
     </div>
   )
 
+
+  // show product 
+  const showProductModel = () => (
+    <div id="addProductModal" className="modal" onClick={handleMessages}>
+      <div className="modal-dialog modal-dialog-centered modal-lg">
+        <div className="modal-content">
+        <form onSubmit={handleProductSubmit}>
+          <div className="modal-header bg-warning text-white"> 
+            <h5 className="modal-title">Add Product</h5>
+              <button className="close" data-dismiss="modal">
+                <span><i className="fas fa-times"></i></span>
+              </button>
+          </div>
+          <div className="modal-body my-2">
+            {errorMsg && showErrorMsg(errorMsg)}
+            {successMsg && showSuccessMsg(successMsg)}
+            
+            {
+              loading ? (
+                <div className="text-center"> {showLoading(loading)} </div>
+              ) : (
+                <Fragment>
+                  <div className="custom-file mb-2">
+                    <input type="file" className="custom-file-input" name="productImage" onChange={handleProductImage} />
+                    <label className="custom-file-label"> choose file</label>
+                  </div>
+                  <div className="form-group">
+                    <label className="text-secondary"> Name</label>
+                    <input className="form-control" type="text" name="productName" onChange={handleProductChange}/>
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group col-md-6">
+                      <label className="text-secondary">
+                        Catagory
+                      </label>
+                      <select className="custom-select mr-sm-2" name="productCatagory" onChange={handleProductChange}> choose one
+                        <option value="">choose one...</option>
+                        {catagories && catagories.map(oneCatagory => (
+                          <option key={oneCatagory._id} value={oneCatagory._id}>
+                            {oneCatagory.catagory}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="text-secondary"> Description</label>
+                    <textarea className="form-control" rows="3" name="productDescription" onChange={handleProductChange}></textarea>
+                  </div>
+                  <div className="form-group">
+                    <label className="text-secondary"> Price</label>
+                    <input type="text" className="form-control" name="productprice" onChange={handleProductChange} />
+                  </div>
+                </Fragment>
+              )
+            }
+              
+          </div>
+          <div className="modal-footer">
+            <button data-dismiss="modal" className="btn btn-secondary"> close </button>
+            <button className="btn btn-warning text-white" type="submit" > submit </button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  )
+
   // render.
   return (
     <section>
       {showHeader()}
       {showActionBtns()}
       {showCatagoryModel()}
+      {showProductModel()}
     </section>
   )
 }

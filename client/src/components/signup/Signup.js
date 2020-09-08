@@ -7,7 +7,7 @@ import { showErrorMsg } from "../../helpers/message"
 import { showSuccessMsg } from "../../helpers/message"
 import { showLoading } from "../../helpers/loading"
 import { isAuthenticated } from "../../helpers/auth"
-import { signup } from "../../api/auth"
+import { signup } from "../../api/auth.api"
 import "./signup.css";
 
 const Signup = () => {
