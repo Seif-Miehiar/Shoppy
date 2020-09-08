@@ -4,6 +4,7 @@ const cors = require("cors");
 const morgan = require("morgan")
 const connectDB = require('./database/db')
 const authRoutes = require("./routes/auth")
+const catagoryRoutes = require('./routes/catagory')
 
 // middlewares
 app.use(cors());
@@ -12,6 +13,7 @@ app.use(express.json());
 //for devlopment use only
 app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);
+app.use('/api/catagory', catagoryRoutes)
 
 
 // creating connection with database

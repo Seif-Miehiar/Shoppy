@@ -1,6 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
+import { createCatagory } from "../../api/catagory"
+// import isEmail from "validator/lib/isEmail";
 
 const AdminDashboard = () => {
+
+  const [catagory, setCatagory] = useState(''); 
+
+  // event handlers
+  const handleCatagoryChange = (event) => {
+    setCatagory(event.target.value);
+    console.log(catagory);
+  }
+
+  const handleCatagorySubmit = (event) => {
+    event.preventDefault();
+
+    const data = { catagory };
+    createCatagory(data);
+    console.log(catagory)
+  }
 
   // views.
   const showHeader = () => (
@@ -49,6 +67,7 @@ const AdminDashboard = () => {
     <div id="addCatagoryModal" className="modal">
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
+        <form onSubmit={handleCatagorySubmit}>
           <div className="modal-header bg-info text-white"> 
             <h5 className="modal-title">Add Catagory</h5>
               <button className="close" data-dismiss="modal">
@@ -56,16 +75,15 @@ const AdminDashboard = () => {
               </button>
           </div>
           <div className="modal-body my-2">
-            <form>
               <label className="text-secondary"> Catagory
-                <input className="form-control" type="text" />
+                <input className="form-control" type="text" onChange={handleCatagoryChange} name="catagory" value={catagory} />
               </label>
-            </form>
           </div>
           <div className="modal-footer">
             <button data-dismiss="modal" className="btn btn-secondary"> close </button>
-            <button className="btn btn-info"> submit </button>
+            <button className="btn btn-info" type="submit"> submit </button>
           </div>
+          </form>
         </div>
       </div>
     </div>
