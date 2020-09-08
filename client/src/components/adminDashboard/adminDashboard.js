@@ -111,12 +111,12 @@ const AdminDashboard = () => {
     } else {
       let formData = new FormData();
 
-      formData.append("product", { product })
-      // formData.append("productImage", productImage);
-      // formData.append("productName", productName);
-      // formData.append("productDescription", productDescription);
-      // formData.append("productCatagory", productCatagory);
-      // formData.append("productPrice", productPrice);
+      // formData.append("product", { product })
+      formData.append("productImage", productImage);
+      formData.append("productName", productName);
+      formData.append("productDescription", productDescription);
+      formData.append("productCatagory", productCatagory);
+      formData.append("productPrice", productPrice);
 
       setLoading(true);
       console.log(formData)
@@ -229,7 +229,7 @@ const AdminDashboard = () => {
     <div id="addProductModal" className="modal" onClick={handleMessages}>
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
-        <form onSubmit={handleProductSubmit}>
+        <form encType="multipart/form-data" onSubmit={handleProductSubmit}>
           <div className="modal-header bg-warning text-white"> 
             <h5 className="modal-title">Add Product</h5>
               <button className="close" data-dismiss="modal">

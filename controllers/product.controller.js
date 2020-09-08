@@ -1,6 +1,10 @@
 const Product = require('../models/product.model');
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
 
 exports.create = async ( req, res ) => {
+  console.log(req.body)
     const { 
       productImage, 
       productName, 

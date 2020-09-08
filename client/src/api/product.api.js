@@ -1,11 +1,11 @@
 import axios from "axios"
 
-
 export const createProduct = async (formData) => {
 
   const config = {
-    header: {
-      "content-type": "application/json"
+    headers: {
+      "content-type": "application/json",
+      // 'content-type': 'multipart/form-data'
     }
   }
 
