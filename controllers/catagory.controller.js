@@ -1,9 +1,22 @@
-exports.create = ( req, res ) => {
-  console.log(req.user)
-  setTimeout(()=> {
-    res.json({
-      successMessage: `${req.body.catagory} was created!`
-    })
+const Catagory = require('../models/catagory.model');
 
-  }, 5000)
+exports.create = async ( req, res ) => {
+    const { catagory } = req.body;
+
+    try {
+      let newCatagory = new Catagory();
+      newCatagory.catagory = catagory;
+
+      newCatagory = await newCatagory.save();
+
+      res.status(200).json({
+        successMessage: `${newCatagory.catagory} was created`
+      })
+
+    } catch (err) {
+      console.log("create catagory error: ",err);
+      res.status(500).json({
+        errorMessage: "Please try again later"
+      })
+    }
 }
