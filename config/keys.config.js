@@ -1,5 +1,5 @@
 //  development or production
-const LIVE = false;
+const LIVE = true;
 
 if (LIVE) {
   module.exports = require("./prod")
