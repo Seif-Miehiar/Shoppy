@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const path = require('path');
 const cors = require("cors");
 require('dotenv').config()
 const morgan = require("morgan")
@@ -19,6 +20,8 @@ app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);
 app.use('/api/catagory', catagoryRoutes)
 app.use('/api/product', productRoutes);
+app.use(express.static(path.join(__dirname, 'client/build')));
+
 
 // creating connection with database
 connectDB();
